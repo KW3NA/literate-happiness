@@ -1,0 +1,9 @@
+# =============================================================================
+# SUPABASE DATABASE & AUTH CONFIGURATION
+# When configured, API and sync scripts connect to Supabase PostgreSQL.
+# When omitted, the platform runs in full local offline mode.
+# =============================================================================
+SUPABASE_URL=https://eiztmxysokakbgcahzod.supabase.co
+SUPABASE_DB_URL=postgresql://postgres.eiztmxysokakbgcahzod:%2F%265aA_D%2A7K8%255mN@aws-0-eu-west-1.pooler.supabase.com:5432/postgres
+SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVpenRteHlzb2tha2JnY2Foem9kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI4ODU3MzksImV4cCI6MjEwODQ2MTczOX0.-pB9FnhTWbuVJATOC1hOyb7VStxiLFGPZVtkvVs6Fqg
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVpenRteHlzb2tha2JnY2Foem9kIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5Mjg4NTczOSwiZXhwIjoyMTA4NDYxNzM5fQ.sVVvTNghoygY2NRA29DbU_x07KCAdD0ZIVe3BrTJmgw
