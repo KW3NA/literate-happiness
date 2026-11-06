@@ -242,9 +242,8 @@ const AssessmentScreen = ({ route, navigation }) => {
     return match ? Math.max(5, parseInt(match[1], 10)) : 30;
   })();
   const [timeRemaining, setTimeRemaining] = useState(durationMinutes * 60);
-  const [questions] = useState(() => {
-    const bank = mockQuestions[assessment.id] || mockQuestions[1];
-    // Fisher–Yates shuffle so retakes are not identical (still lengthiest bank intact)
+  const [questions, setQuestions] = useState<any[]>(() => {
+    const bank = mockQuestions[assessment?.id] || mockQuestions[1];
     const arr = [...bank];
     for (let i = arr.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -252,7 +251,69 @@ const AssessmentScreen = ({ route, navigation }) => {
     }
     return arr;
   });
+  const [loadingQuestions, setLoadingQuestions] = useState(false);
   const [showQuitModal, setShowQuitModal] = useState(false);
+
+  // Dynamically load quiz questions from Supabase modules table (quiz JSON and blocks column)
+  useEffect(() => {
+    let isMounted = true;
+    async function loadSupabaseModuleQuestions() {
+      try {
+        setLoadingQuestions(true);
+        let query = supabase.from('modules').select('*');
+        if (assessment?.course_id) {
+          query = query.eq('course_id', assessment.course_id);
+        }
+        const { data: dbModules } = await query;
+        if (!isMounted) return;
+
+        const dynamicQuestions: any[] = [];
+        if (dbModules && dbModules.length > 0) {
+          dbModules.forEach((mod: any) => {
+            if (mod.quiz && Array.isArray(mod.quiz.questions)) {
+              mod.quiz.questions.forEach((q: any, idx: number) => {
+                dynamicQuestions.push({
+                  id: q.id || `mod_${mod.id}_q_${idx}`,
+                  type: 'multiple_choice',
+                  question: q.question,
+                  options: q.options || [],
+                  correctAnswer: typeof q.correctIndex !== 'undefined' ? q.correctIndex : (q.correctAnswer ?? 0),
+                  explanation: q.explanation,
+                });
+              });
+            }
+            if (Array.isArray(mod.blocks)) {
+              mod.blocks.forEach((blk: any, bIdx: number) => {
+                if (blk.type === 'quiz' || blk.type === 'question') {
+                  dynamicQuestions.push({
+                    id: blk.id || `block_${mod.id}_${bIdx}`,
+                    type: blk.options ? 'multiple_choice' : 'fill_blank',
+                    question: blk.question || blk.content || blk.text,
+                    options: blk.options || [],
+                    correctAnswer: blk.correctAnswer ?? blk.correctIndex ?? 0,
+                  });
+                }
+              });
+            }
+          });
+        }
+
+        if (dynamicQuestions.length >= 2 && isMounted) {
+          for (let i = dynamicQuestions.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [dynamicQuestions[i], dynamicQuestions[j]] = [dynamicQuestions[j], dynamicQuestions[i]];
+          }
+          setQuestions(dynamicQuestions);
+        }
+      } catch (err) {
+        console.log('Error fetching questions from Supabase modules:', err);
+      } finally {
+        if (isMounted) setLoadingQuestions(false);
+      }
+    }
+    loadSupabaseModuleQuestions();
+    return () => { isMounted = false; };
+  }, [assessment]);
 
   // Live refs so the interval never calls a stale closure and cannot double-submit.
   const submittedRef = React.useRef(false);
@@ -334,11 +395,23 @@ const AssessmentScreen = ({ route, navigation }) => {
           return false;
         }).length;
         const scorePct = Math.round((correct / total) * 100);
-        await supabase.from('quiz_attempts').insert({
-          user_id: userId,
-          score: scorePct,
-          passed: scorePct >= 70,
-        });
+        
+        let courseId: string | null = assessment?.course_id || (typeof assessment?.id === 'string' && assessment.id.includes('-') ? assessment.id : null);
+        if (!courseId) {
+          const { data: c } = await supabase.from('courses').select('id').limit(1).maybeSingle();
+          courseId = c?.id ?? null;
+        }
+
+        if (courseId) {
+          await supabase.from('quiz_attempts').insert({
+            user_id: userId,
+            course_id: courseId,
+            module_id: assessment?.module_id || null,
+            score: scorePct,
+            passed: scorePct >= 70,
+            created_at: new Date().toISOString(),
+          });
+        }
       } catch (err) {
         console.log('Failed to save assessment attempt:', err);
       }

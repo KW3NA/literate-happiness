@@ -1,4 +1,5 @@
 // App.tsx
+import 'react-native-url-polyfill/auto';
 import * as React from 'react';
 import './i18n'; // initialize i18next (must come before any useTranslation usage)
 import { NavigationContainer } from '@react-navigation/native';

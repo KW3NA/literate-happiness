@@ -1,0 +1,6 @@
+{
+  "name": "E-Literacy Platform",
+  "description": "South African Digital Inclusion Platform: Admin Monitoring, Practitioner Portal, and Citizen Learning.",
+  "permissions": [],
+  "capabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -21,244 +21,99 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Learn'>;
 // Course data
 const courseCategories = ['All Courses', 'Beginner', 'Intermediate', 'Advanced', 'Digital Skills', 'Career'];
 
-const initialInProgressCourses = [
-  {
-    id: 1,
-    title: 'Digital Basics 101',
-    progress: 75,
-    type: 'coding' as const,
-    imageUrl: 'https://i.pinimg.com/736x/c9/af/43/c9af431cdb9322e4ff4a43af70db96ae.jpg',
-  },
-  {
-    id: 2,
-    title: 'Staying Safe Online',
-    progress: 45,
-    type: 'ai' as const,
-    imageUrl: 'https://i.pinimg.com/1200x/fd/d3/8e/fdd38ec2967a3b43678794c61432b22b.jpg',
-  },
-  {
-    id: 3,
-    title: 'Smart Skills: Working with Tools',
-    progress: 60,
-    type: 'ml' as const,
-    imageUrl: 'https://platform.theverge.com/wp-content/uploads/sites/2/chorus/uploads/chorus_asset/file/24102584/m365app.jpg?quality=90&strip=all&crop=0,0.24875621890547,100,99.502487562189',
-  },
-   {
-    id: 4,
-    title: 'Create a CV that Stands Out',
-    progress: 15,
-    type: 'coding' as const,
-    imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSo94aOlDKPw6XtMFWsno0zeO5bQhmhYuN0PA&s',
-  },
-];
+type InProgressCourse = {
+  id: string | number;
+  title: string;
+  progress: number;
+  type: 'coding' | 'ai' | 'ml';
+  imageUrl: string;
+};
 
-const initialAvailableCourses = [
-  // Beginner Courses
-  {
-    id: 4,
-    title: 'Digital Basics 101',
-    type: 'coding' as const,
-    duration: '45 mins',
-    level: 'Beginner',
-    tags: 'Devices • Internet',
-    icon: 'desktop',
-    imageUrl: 'https://i.pinimg.com/736x/c9/af/43/c9af431cdb9322e4ff4a43af70db96ae.jpg',
-  },
-  {
-    id: 5,
-    title: 'Click with Confidence',
-    type: 'coding' as const,
-    duration: '30 mins',
-    level: 'Beginner',
-    tags: 'Web • Navigation',
-    icon: 'arrow-pointer',
-    imageUrl: 'https://i.pinimg.com/1200x/5c/04/4d/5c044dfa3ddd5ef809f1c8e473d9bf35.jpg',
-  },
-  {
-    id: 6,
-    title: 'Staying Safe Online',
-    type: 'ai' as const,
-    duration: '35 mins',
-    level: 'Beginner',
-    tags: 'Safety • Privacy',
-    icon: 'shield-halved',
-    imageUrl: 'https://i.pinimg.com/1200x/fd/d3/8e/fdd38ec2967a3b43678794c61432b22b.jpg',
-  },
-  {
-    id: 7,
-    title: 'Everyday Tech',
-    type: 'coding' as const,
-    duration: '40 mins',
-    level: 'Beginner',
-    tags: 'Mobile • Photos',
-    icon: 'mobile-screen',
-    imageUrl: 'https://i.pinimg.com/736x/57/7d/5b/577d5bb2029524c0070fbf4307114666.jpg',
-  },
-  {
-    id: 8,
-    title: 'Intro to Email & Messaging',
-    type: 'coding' as const,
-    duration: '30 mins',
-    level: 'Beginner',
-    tags: 'Email • Chat',
-    icon: 'envelope',
-    imageUrl: 'https://i.pinimg.com/736x/cd/5d/40/cd5d400c39e3891914066593b96d610c.jpg',
-  },
-  // Intermediate Courses
-  {
-    id: 9,
-    title: 'Smart Skills: Working with Tools',
-    type: 'ml' as const,
-    duration: '60 mins',
-    level: 'Intermediate',
-    tags: 'Productivity • Docs',
-    icon: 'wrench',
-    imageUrl: 'https://platform.theverge.com/wp-content/uploads/sites/2/chorus/uploads/chorus_asset/file/24102584/m365app.jpg?quality=90&strip=all&crop=0,0.24875621890547,100,99.502487562189',
-  },
-  {
-    id: 10,
-    title: 'Online Job Search Essentials',
-    type: 'ml' as const,
-    duration: '45 mins',
-    level: 'Intermediate',
-    tags: 'Career • CV',
-    icon: 'briefcase',
-    imageUrl: 'https://www.flexjobs.com/blog/wp-content/uploads/2021/09/10045333/Job-Searching-Online-11-Best-Practices-You-Need-to-Know-2-2.jpg?w=1024',
-  },
-  {
-    id: 11,
-    title: 'Digital Communication at Work',
-    type: 'coding' as const,
-    duration: '50 mins',
-    level: 'Intermediate',
-    tags: 'Email • Meetings',
-    icon: 'users',
-    imageUrl: 'https://i.pinimg.com/1200x/13/f4/d0/13f4d04f47eac56d27d4b9678f86ff6a.jpg',
-  },
-  {
-    id: 12,
-    title: 'Manage Your Digital Identity',
-    type: 'ai' as const,
-    duration: '40 mins',
-    level: 'Intermediate',
-    tags: 'Branding • Safety',
-    icon: 'user-shield',
-    imageUrl: 'https://www.globalsign.com/application/files/6917/1496/1818/digital-identity-hero-image.webp',
-  },
-  {
-    id: 13,
-    title: 'Intro to Cloud Tools',
-    type: 'coding' as const,
-    duration: '35 mins',
-    level: 'Intermediate',
-    tags: 'Cloud • Storage',
-    icon: 'cloud',
-    imageUrl: 'https://i.pinimg.com/1200x/85/1b/74/851b74e4e5e8f285409f567c86a377dc.jpg',
-  },
-  // Advanced Courses
-  {
-    id: 14,
-    title: 'Tech for Entrepreneurs',
-    type: 'ai' as const,
-    duration: '60 mins',
-    level: 'Advanced',
-    tags: 'Business • Tools',
-    icon: 'rocket',
-    imageUrl: 'https://i.pinimg.com/736x/2e/6d/82/2e6d82123a4ef5422984ea07fa6ad0cd.jpg',
-  },
-  {
-    id: 15,
-    title: 'Cybersecurity Basics',
-    type: 'ai' as const,
-    duration: '55 mins',
-    level: 'Advanced',
-    tags: 'Security • Threats',
-    icon: 'shield',
-    imageUrl: 'https://i.pinimg.com/736x/0b/8a/48/0b8a48d4343a1eb1fd9581e1048f2f45.jpg',
-  },
-  {
-    id: 16,
-    title: 'Data Skills for Decision-Making',
-    type: 'ml' as const,
-    duration: '75 mins',
-    level: 'Advanced',
-    tags: 'Analysis • Insights',
-    icon: 'chart-line',
-    imageUrl: 'https://i.pinimg.com/736x/2b/a2/9c/2ba29c620e03944902f182e748aa8abd.jpg',
-  },
-  {
-    id: 17,
-    title: 'Content Creation Toolkit',
-    type: 'coding' as const,
-    duration: '60 mins',
-    level: 'Advanced',
-    tags: 'Design • Editing',
-    icon: 'video',
-    imageUrl: 'https://i.pinimg.com/1200x/e5/b3/e3/e5b3e38520b4b0bc4d7a4b1d6b05605f.jpg',
-  },
-  {
-    id: 18,
-    title: 'AI & the Future of Work',
-    type: 'ai' as const,
-    duration: '50 mins',
-    level: 'Advanced',
-    tags: 'AI • Jobs',
-    icon: 'robot',
-    imageUrl: 'https://i.pinimg.com/1200x/63/83/86/638386035baa03f7b2132090383ea92d.jpg',
-  },
-];
-
-const progressStats = {
-  totalCourses: 28,
-  inProgress: 3,
-  completed: 1,
+type AvailableCourse = {
+  id: string | number;
+  title: string;
+  type: 'coding' | 'ai' | 'ml';
+  duration: string;
+  level: string;
+  tags: string;
+  icon: string;
+  imageUrl: string;
+  videoUrl?: string;
 };
 
 function LessonsMenu({ navigation }: Props) {
   const [selectedCategory, setSelectedCategory] = useState('All Courses');
-  const [inProgressCourses, setInProgressCourses] = useState(initialInProgressCourses);
-  const [availableCourses, setAvailableCourses] = useState(initialAvailableCourses);
+  const [inProgressCourses, setInProgressCourses] = useState<InProgressCourse[]>([]);
+  const [availableCourses, setAvailableCourses] = useState<AvailableCourse[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [progressStats, setProgressStats] = useState({
+    totalCourses: 0,
+    inProgress: 0,
+    completed: 0,
+  });
 
   useEffect(() => {
     async function loadSupabaseData() {
       try {
-        const { data: dbCourses } = await supabase
+        setLoading(true);
+        const { data: dbCourses, error: courseErr } = await supabase
           .from('courses')
           .select('*')
           .eq('status', 'approved')
           .eq('is_published', true);
 
-        if (dbCourses && dbCourses.length > 0) {
-          const mapped = dbCourses.map((c: any) => ({
-            id: c.id,
-            title: c.title,
-            type: (c.competency_area === 'using_devices' ? 'coding' : (c.competency_area === 'staying_safe' ? 'ai' : 'ml')) as any,
-            duration: c.duration || `${c.estimated_minutes || 30} mins`,
-            level: c.level,
-            tags: `${c.level} • ${(c.competency_area || 'digital').replace(/_/g, ' ')}`,
-            icon: c.competency_area === 'using_devices' ? 'desktop' : 'shield-halved',
-            imageUrl: c.image_url || 'https://i.pinimg.com/736x/c9/af/43/c9af431cdb9322e4ff4a43af70db96ae.jpg',
-            videoUrl: c.video_url || getCourseVideo(c.id, 0).url,
-          }));
-          setAvailableCourses(mapped);
+        if (courseErr) throw courseErr;
+
+        const mapped: AvailableCourse[] = (dbCourses || []).map((c: any) => ({
+          id: c.id,
+          title: c.title,
+          type: (c.competency_area === 'using_devices' ? 'coding' : (c.competency_area === 'staying_safe' ? 'ai' : 'ml')) as any,
+          duration: c.duration || `${c.estimated_minutes || 30} mins`,
+          level: c.level,
+          tags: `${c.level} • ${(c.competency_area || 'digital').replace(/_/g, ' ')}`,
+          icon: c.competency_area === 'using_devices' ? 'desktop' : 'shield-halved',
+          imageUrl: c.image_url || 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=600&q=80',
+          videoUrl: c.video_url || '',
+        }));
+        setAvailableCourses(mapped);
+
+        // Fetch enrollments for current user
+        const { data: { user } } = await supabase.auth.getUser();
+        let enrollmentsQuery = supabase.from('enrollments').select('*, courses(*)');
+        if (user) {
+          enrollmentsQuery = enrollmentsQuery.eq('user_id', user.id);
         }
+        const { data: enrollments } = await enrollmentsQuery;
 
-        const { data: enrollments } = await supabase
-          .from('enrollments')
-          .select('*, courses(*)');
-
-        if (enrollments && enrollments.length > 0) {
-          const inProgress = enrollments.map((e: any) => ({
-            id: e.course_id || e.id,
-            title: e.courses?.title || 'Course In Progress',
-            progress: e.progress || 25,
-            type: 'coding' as any,
-            imageUrl: e.courses?.image_url || 'https://i.pinimg.com/736x/c9/af/43/c9af431cdb9322e4ff4a43af70db96ae.jpg',
-          }));
+        if (enrollments) {
+          const inProgress = enrollments
+            .filter((e: any) => !e.completed)
+            .map((e: any) => ({
+              id: e.course_id || e.id,
+              title: e.courses?.title || 'Enrolled Course',
+              progress: e.progress || 0,
+              type: 'coding' as const,
+              imageUrl: e.courses?.image_url || 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=600&q=80',
+            }));
           setInProgressCourses(inProgress);
+
+          const completedCount = enrollments.filter((e: any) => e.completed).length;
+          setProgressStats({
+            totalCourses: mapped.length,
+            inProgress: inProgress.length,
+            completed: completedCount,
+          });
+        } else {
+          setProgressStats({
+            totalCourses: mapped.length,
+            inProgress: 0,
+            completed: 0,
+          });
         }
       } catch (e) {
-        console.log('Error loading courses from Supabase:', e);
+        console.error('Error loading courses from Supabase:', e);
+      } finally {
+        setLoading(false);
       }
     }
     loadSupabaseData();

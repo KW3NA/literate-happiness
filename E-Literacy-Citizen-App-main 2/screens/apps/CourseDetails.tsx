@@ -1,6 +1,6 @@
 import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet, StatusBar, Dimensions, ImageBackground } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet, StatusBar, Dimensions, ImageBackground, ActivityIndicator } from 'react-native';
 import YoutubePlayer from 'react-native-youtube-iframe';
 import { LinearGradient } from 'expo-linear-gradient';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -37,208 +37,52 @@ const CourseDetails: React.FC<Props> = ({ navigation, route }) => {
     return (match && match[2].length === 11) ? match[2] : '';
   };
   
-  // Course data mapping - all available courses
-  const allCourses: { [key: string]: CourseDetailsProps } = {
-    '4': {
-      id: '4',
-      title: 'Digital Basics 101',
-      description: 'Master the fundamentals of digital technology in this comprehensive beginner course. Learn essential computer skills, internet navigation, and basic software applications. Perfect for those new to technology or looking to refresh their digital knowledge.',
-      duration: '45 mins',
-      level: 'Beginner',
-      tags: ['Devices', 'Internet', 'Basics'],
-      imageUrl: 'https://i.pinimg.com/736x/c9/af/43/c9af431cdb9322e4ff4a43af70db96ae.jpg',
-        videoUrl: 'https://www.youtube.com/watch?v=Z1XJFdHlos4',
-    },
-    '5': {
-      id: '5',
-      title: 'Click with Confidence',
-      description: 'Learn to navigate the web with confidence. Master mouse and keyboard skills, understand web browsers, and discover how to find information online safely and efficiently.',
-      duration: '30 mins',
-      level: 'Beginner',
-      tags: ['Web', 'Navigation', 'Browsing'],
-      imageUrl: 'https://i.pinimg.com/1200x/5c/04/4d/5c044dfa3ddd5ef809f1c8e473d9bf35.jpg',
-        videoUrl: 'https://www.youtube.com/watch?v=7lpqqmgeLNg',
-    },
-    '6': {
-      id: '6',
-      title: 'Staying Safe Online',
-      description: 'Protect yourself in the digital world. Learn about online privacy, password security, recognizing scams, and best practices for staying safe on the internet.',
-      duration: '35 mins',
-      level: 'Beginner',
-      tags: ['Safety', 'Privacy', 'Security'],
-      imageUrl: 'https://i.pinimg.com/1200x/fd/d3/8e/fdd38ec2967a3b43678794c61432b22b.jpg',
-        videoUrl: 'https://www.youtube.com/watch?v=SUOc3n06wIA',
-    },
-    '7': {
-      id: '7',
-      title: 'Everyday Tech',
-      description: 'Master your smartphone and mobile devices. Learn to take photos, make calls, send messages, and use apps effectively for daily tasks.',
-      duration: '40 mins',
-      level: 'Beginner',
-      tags: ['Mobile', 'Photos', 'Apps'],
-      imageUrl: 'https://i.pinimg.com/736x/57/7d/5b/577d5bb2029524c0070fbf4307114666.jpg',
-        videoUrl: 'https://www.youtube.com/watch?v=fEkXavRkzlQ',
-    },
-    '8': {
-      id: '8',
-      title: 'Intro to Email & Messaging',
-      description: 'Communicate effectively online. Learn to send emails, use messaging apps, organize your inbox, and maintain professional communication.',
-      duration: '30 mins',
-      level: 'Beginner',
-      tags: ['Email', 'Chat', 'Communication'],
-      imageUrl: 'https://i.pinimg.com/736x/cd/5d/40/cd5d400c39e3891914066593b96d610c.jpg',
-        videoUrl: 'https://www.youtube.com/watch?v=a5uT85i9zQU',
-    },
-    '9': {
-      id: '9',
-      title: 'Smart Skills: Working with Tools',
-      description: 'Boost your productivity with digital tools. Master word processing, spreadsheets, presentations, and collaboration software for work and personal projects.',
-      duration: '60 mins',
-      level: 'Intermediate',
-      tags: ['Productivity', 'Docs', 'Office'],
-      imageUrl: 'https://platform.theverge.com/wp-content/uploads/sites/2/chorus/uploads/chorus_asset/file/24102584/m365app.jpg?quality=90&strip=all&crop=0,0.24875621890547,100,99.502487562189',
-        videoUrl: 'https://www.youtube.com/watch?v=DGDC954-AO8',
-    },
-    '10': {
-      id: '10',
-      title: 'Online Job Search Essentials',
-      description: 'Navigate the digital job market successfully. Learn to create professional profiles, search for opportunities, and apply for jobs online effectively.',
-      duration: '45 mins',
-      level: 'Intermediate',
-      tags: ['Career', 'CV', 'Job Search'],
-      imageUrl: 'https://www.flexjobs.com/blog/wp-content/uploads/2021/09/10045333/Job-Searching-Online-11-Best-Practices-You-Need-to-Know-2-2.jpg?w=1024',
-        videoUrl: 'https://www.youtube.com/watch?v=l_C5s4JQHZ4',
-    },
-    '11': {
-      id: '11',
-      title: 'Digital Communication at Work',
-      description: 'Excel in professional digital communication. Master email etiquette, video conferencing, team collaboration tools, and remote work best practices.',
-      duration: '50 mins',
-      level: 'Intermediate',
-      tags: ['Email', 'Meetings', 'Collaboration'],
-      imageUrl: 'https://i.pinimg.com/1200x/13/f4/d0/13f4d04f47eac56d27d4b9678f86ff6a.jpg',
-        videoUrl: 'https://www.youtube.com/watch?v=esOIt3-9vlA',
-    },
-    '12': {
-      id: '12',
-      title: 'Manage Your Digital Identity',
-      description: 'Build and protect your online presence. Learn about personal branding, social media management, reputation building, and digital footprint awareness.',
-      duration: '40 mins',
-      level: 'Intermediate',
-      tags: ['Branding', 'Safety', 'Social Media'],
-      imageUrl: 'https://www.globalsign.com/application/files/6917/1496/1818/digital-identity-hero-image.webp',
-        videoUrl: 'https://www.youtube.com/watch?v=VGETWcjoAUU',
-    },
-    '13': {
-      id: '13',
-      title: 'Intro to Cloud Tools',
-      description: 'Harness the power of cloud computing. Learn to use cloud storage, backup solutions, online collaboration tools, and work from anywhere.',
-      duration: '35 mins',
-      level: 'Intermediate',
-      tags: ['Cloud', 'Storage', 'Backup'],
-      imageUrl: 'https://i.pinimg.com/1200x/85/1b/74/851b74e4e5e8f285409f567c86a377dc.jpg',
-        videoUrl: 'https://www.youtube.com/watch?v=RVMYtnYV4Ds',
-    },
-    '14': {
-      id: '14',
-      title: 'Tech for Entrepreneurs',
-      description: 'Leverage technology to grow your business. Discover digital marketing tools, e-commerce platforms, business automation, and online business strategies.',
-      duration: '60 mins',
-      level: 'Advanced',
-      tags: ['Business', 'Tools', 'Marketing'],
-      imageUrl: 'https://i.pinimg.com/736x/2e/6d/82/2e6d82123a4ef5422984ea07fa6ad0cd.jpg',
-        videoUrl: 'https://www.youtube.com/watch?v=wpDi7B_NmQ0',
-    },
-    '15': {
-      id: '15',
-      title: 'Cybersecurity Basics',
-      description: 'Protect yourself and your data from digital threats. Learn about malware, phishing, data protection, and cybersecurity best practices for personal and professional use.',
-      duration: '55 mins',
-      level: 'Advanced',
-      tags: ['Security', 'Threats', 'Protection'],
-      imageUrl: 'https://i.pinimg.com/736x/0b/8a/48/0b8a48d4343a1eb1fd9581e1048f2f45.jpg',
-        videoUrl: 'https://www.youtube.com/watch?v=nIoXdkEBl4M',
-    },
-    '16': {
-      id: '16',
-      title: 'Data Skills for Decision-Making',
-      description: 'Transform data into insights. Learn to analyze information, create charts and graphs, interpret statistics, and make data-driven decisions in your personal and professional life.',
-      duration: '75 mins',
-      level: 'Advanced',
-      tags: ['Analysis', 'Insights', 'Data'],
-      imageUrl: 'https://i.pinimg.com/736x/2b/a2/9c/2ba29c620e03944902f182e748aa8abd.jpg',
-        videoUrl: 'https://www.youtube.com/watch?v=aircAruvnKk',
-    },
-    '17': {
-      id: '17',
-      title: 'Content Creation Toolkit',
-      description: 'Create compelling digital content. Master graphic design basics, video editing, social media content creation, and storytelling for the digital age.',
-      duration: '60 mins',
-      level: 'Advanced',
-      tags: ['Design', 'Editing', 'Creativity'],
-      imageUrl: 'https://i.pinimg.com/1200x/e5/b3/e3/e5b3e38520b4b0bc4d7a4b1d6b05605f.jpg',
-        videoUrl: 'https://www.youtube.com/watch?v=ZZkgC9BHy00',
-    },
-    '18': {
-      id: '18',
-      title: 'AI & the Future of Work',
-      description: 'Understand artificial intelligence and its impact on the workplace. Learn about AI tools, automation trends, and how to adapt to the changing digital landscape.',
-      duration: '50 mins',
-      level: 'Advanced',
-      tags: ['AI', 'Jobs', 'Automation'],
-      imageUrl: 'https://i.pinimg.com/1200x/63/83/86/638386035baa03f7b2132090383ea92d.jpg',
-        videoUrl: 'https://www.youtube.com/watch?v=fEkXavRkzlQ',
-    },
-  };
-
-  // Course data state loaded from allCourses or live Supabase
-  const [courseData, setCourseData] = React.useState<CourseDetailsProps>(
-    allCourses[courseId] || {
-      id: courseId,
-      title: 'Digital Skills Course',
-      description: 'Master practical digital skills, safe internet practices, and job readiness tools.',
-      duration: '45 mins',
-      level: 'Beginner',
-      tags: ['Digital Skills', 'Certification'],
-      imageUrl: 'https://i.pinimg.com/736x/c9/af/43/c9af431cdb9322e4ff4a43af70db96ae.jpg',
-      videoUrl: 'https://www.youtube.com/watch?v=wod8gUBxWR4',
-    }
-  );
-  // Start with built-in content so the curriculum is never empty;
-  // Supabase data (if present) overrides it below.
-  const [modules, setModules] = React.useState<any[]>(getCourseModules(courseId));
+  const [courseData, setCourseData] = React.useState<CourseDetailsProps | null>(null);
+  const [modules, setModules] = React.useState<any[]>([]);
+  const [loading, setLoading] = React.useState<boolean>(true);
 
   React.useEffect(() => {
     async function fetchCourseDetails() {
       try {
-        const { data: c } = await supabase
-          .from('courses')
-          .select('*, modules(*)')
-          .eq('id', courseId)
-          .single();
+        setLoading(true);
+        // Query Supabase courses table with joined modules
+        let query = supabase.from('courses').select('*, modules(*)');
+        if (courseId.includes('-')) {
+          query = query.eq('id', courseId);
+        } else {
+          query = query.or(`id.eq.${courseId},estimated_minutes.eq.${courseId}`);
+        }
 
-        if (c) {
+        const { data, error } = await query.maybeSingle();
+
+        if (error) {
+          console.error('Supabase query error for course:', error);
+        }
+
+        if (data) {
           setCourseData({
-            id: c.id,
-            title: c.title,
-            description: c.description || 'Master practical digital skills and assessments.',
-            duration: c.duration || `${c.estimated_minutes || 45} mins`,
-            level: c.level || 'Beginner',
-            tags: [c.level, (c.competency_area || '').replace(/_/g, ' '), 'Certification'].filter(Boolean),
-            imageUrl: c.image_url || 'https://i.pinimg.com/736x/c9/af/43/c9af431cdb9322e4ff4a43af70db96ae.jpg',
-            videoUrl: c.video_url || getCourseVideo(c.id, 0).url,
+            id: data.id,
+            title: data.title,
+            description: data.description || 'Master practical digital skills, safe internet practices, and job readiness tools.',
+            duration: data.duration || `${data.estimated_minutes || 45} mins`,
+            level: data.level || 'Beginner',
+            tags: [data.level, (data.competency_area || '').replace(/_/g, ' ')].filter(Boolean),
+            imageUrl: data.image_url || 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=600&q=80',
+            videoUrl: data.video_url || '',
           });
-          if (c.modules && c.modules.length > 0) {
-            setModules(c.modules.sort((a: any, b: any) => (a.order_num || 0) - (b.order_num || 0)));
+          if (data.modules && data.modules.length > 0) {
+            setModules(data.modules.sort((a: any, b: any) => (a.order_num || 0) - (b.order_num || 0)));
           } else {
-            // No DB content — keep the built-in curriculum for this course.
-            setModules(getCourseModules(courseId));
+            setModules([]);
           }
+        } else {
+          setCourseData(null);
         }
       } catch (err) {
-        console.log('Error fetching course details from Supabase:', err);
-        // Offline / no row: fall back to built-in content.
-        setModules(getCourseModules(courseId));
+        console.error('Error fetching course details from Supabase:', err);
+        setCourseData(null);
+      } finally {
+        setLoading(false);
       }
     }
     fetchCourseDetails();
@@ -400,6 +244,30 @@ const CourseDetails: React.FC<Props> = ({ navigation, route }) => {
       </TouchableOpacity>
     </View>
   );
+
+  if (loading) {
+    return (
+      <SafeAreaView style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+        <ActivityIndicator size="large" color="#E67012" />
+        <TranslatedText style={{ marginTop: 12, color: '#666', fontSize: 16 }}>Loading course details...</TranslatedText>
+      </SafeAreaView>
+    );
+  }
+
+  if (!courseData) {
+    return (
+      <SafeAreaView style={[styles.container, { justifyContent: 'center', alignItems: 'center', padding: 24 }]}>
+        <FontAwesome6 name="triangle-exclamation" size={48} color="#E67012" />
+        <TranslatedText style={{ fontSize: 20, fontWeight: 'bold', marginTop: 16, color: '#333' }}>Course Not Found</TranslatedText>
+        <TranslatedText style={{ fontSize: 14, color: '#666', textAlign: 'center', marginTop: 8, marginBottom: 24 }}>
+          The requested course is currently unavailable or has not been approved yet.
+        </TranslatedText>
+        <TouchableOpacity style={styles.enrollButton} onPress={() => navigation.goBack()}>
+          <TranslatedText style={styles.enrollButtonText}>Back to Learning Hub</TranslatedText>
+        </TouchableOpacity>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.container}>
